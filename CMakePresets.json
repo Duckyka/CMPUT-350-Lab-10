@@ -13,6 +13,20 @@
         "CMAKE_BUILD_TYPE": "Debug"
       },
       "binaryDir": "build"
+    },
+    {
+      "name": "CustomDebug",
+      "generator": "MinGW Makefiles",
+      "environment": {
+      "PATH": "C:/msys64/ucrt64/bin;$ENV{PATH}"
+      },
+      "cacheVariables": {
+          "CMAKE_BUILD_TYPE": "Debug",
+          "CMAKE_C_COMPILER": "C:/msys64/ucrt64/bin/gcc.exe",
+          "CMAKE_CXX_COMPILER": "C:/msys64/ucrt64/bin/g++.exe",
+          "CMAKE_MAKE_PROGRAM": "C:/msys64/ucrt64/bin/mingw32-make.exe"
+      },
+      "binaryDir": "build"
     }
   ]
 }

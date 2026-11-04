@@ -1,5 +1,6 @@
 #include <cmath>
 #include <iostream>
+#include <vector>
 
 #include "open_sans_semibold.h"
 #include <SFML/Graphics.hpp>
@@ -37,7 +38,7 @@ int main() {
     fullscreenTriangle[1].texCoords = {2, 0};
     fullscreenTriangle[2].texCoords = {0, 2};
     // load vertex and fragment shaders:
-    sf::Shader shader(std::filesystem::path{"main.vert"}, std::filesystem::path{"main.frag"});
+    sf::Shader shader(std::filesystem::path{"./src/main.vert"}, std::filesystem::path{"./src/main.frag"});
     // ... other shaders can go here...
 
     sf::Font openSansFont(EmbeddedFonts::OpenSans_SemiBold_ttf,
@@ -56,6 +57,7 @@ int main() {
     float worldUnitsPerPixel = 1.f / window.getSize().y;
     sf::Vector2f camCenterWorld{0.f, 0.f};
     int maxIters = INIT_ITERS;
+    //sf::Texture texture;
 
     int i = -1;
     while (window.isOpen()) {
@@ -114,10 +116,18 @@ int main() {
             maxIters = std::min(maxIters * 2, TRUE_MAX_ITERS);
         }
         // TODO set shader uniforms here...
+        shader.setUniform("c", c);
+        shader.setUniform("MAX_ITERS", maxIters);
+        sf::Vector2f windowSize = {window.getSize().x, window.getSize().y};
+        shader.setUniform("windowSizePixels", windowSize);
+        shader.setUniform("camCenterWorld", camCenterWorld);
+        shader.setUniform("camWorldUnitsPerPixel", worldUnitsPerPixel);
+
 
         window.clear(sf::Color::Black);
         // TODO something.draw(fullscreenTriangle, &shader);
         // this might change as you finish more parts!
+        window.draw(fullscreenTriangle, &shader);
         cText.setString("c = (" + std::to_string(c.x) + ", " + std::to_string(c.y) + ")");
         cTextShadow.setString("c = (" + std::to_string(c.x) + ", " + std::to_string(c.y) + ")");
         window.draw(cTextShadow);
@@ -125,6 +135,10 @@ int main() {
         window.display();
 
         // TODO (reprojection)... update "old" states
+        shader.setUniform("cameraScale", worldUnitsPerPixel);
+        shader.setUniform("cameraPosition", camCenterWorld);
+        //texture.update(window);
+        //shader.setUniform("mTexture", texture);
     }
     return 0;
 }
